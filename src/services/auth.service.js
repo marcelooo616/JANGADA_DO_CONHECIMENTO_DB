@@ -73,6 +73,7 @@ async function loginUser(loginData) {
   // Lógica de negócio: gerar o token
   const payload = {
     id: user.id,
+    name: user.full_name,
     role: user.Role.name
   };
 
