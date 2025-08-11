@@ -39,7 +39,7 @@ async function startServer() {
     await db.Category.findOrCreate({ where: { name: 'Geral', slug: 'geral' } });
 
     if (require.main === module) {
-      app.listen(PORT, () => {
+      app.listen(PORT, '0.0.0.0',() => {
         console.log(`[SUCCESS] Servidor iniciado e rodando na porta ${PORT}`);
       });
     }
