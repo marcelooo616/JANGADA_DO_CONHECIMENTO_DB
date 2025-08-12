@@ -72,6 +72,15 @@ exports.update = async (req, res) => {
   }
 };
 
+exports.findById = async (req, res) => {
+  try {
+    const article = await articleService.findArticleById(req.params.id);
+    res.status(200).json(article);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 exports.delete = async (req, res) => {
   try {
     const articleId = req.params.id; // 

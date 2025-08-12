@@ -86,6 +86,14 @@ async function findArticleBySlug(slug) {
   return article;
 }
 
+async function findArticleById(id) {
+  const article = await Article.findByPk(id, {
+    include: [{ model: User }, { model: Category }]
+  });
+  if (!article) throw new Error("Artigo não encontrado.");
+  return article;
+}
+
 
 async function updateArticle(id, articleData, requestingUser) {
   if (requestingUser.role !== 'admin') {
@@ -129,5 +137,6 @@ module.exports = {
   updateArticle,
   findAllArticles,
   findArticleBySlug,
-  deleteArticle, // <<-- Exporte a nova função
+  deleteArticle,
+  findArticleById,
 };

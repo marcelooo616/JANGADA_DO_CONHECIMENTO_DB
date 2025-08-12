@@ -21,4 +21,6 @@ router.put('/:id', verifyToken, articleController.update);
 // DELETE /api/articles/:id - Deletar um artigo (protegida)
 router.delete('/:id', verifyToken, articleController.delete);
 
+router.get('/id/:id', articleController.findById);
+
 module.exports = router;
