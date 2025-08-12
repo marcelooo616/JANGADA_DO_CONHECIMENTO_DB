@@ -19,7 +19,7 @@ exports.uploadImage = async (req, res) => {
     });
 
     // Retorna a URL pública da imagem
-    return res.status(200).json({ url: blob.url });
+    return res.status(200).json({ location: blob.url });
 
   } catch (err) {
     console.error('Erro ao fazer upload para o Vercel Blob:', err);
