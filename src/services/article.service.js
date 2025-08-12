@@ -24,6 +24,7 @@ async function createArticle(articleData, requestingUser) {
     slug,
     content,
     categoryId,
+    cover_image_url,
     userId: requestingUser.id, // Ainda salvamos o ID de quem criou
     status: 'published',
     publication_date: new Date()
