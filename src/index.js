@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth.routes');
 const articleRoutes = require('./routes/article.routes');
 const categoryRoutes = require('./routes/category.routes');
 const commentRoutes = require('./routes/comment.routes');
+const uploadRoutes = require('./routes/upload.routes');
 
 const app = express();
 app.use(cors());
@@ -18,6 +19,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/comments', commentRoutes);
+app.use('/api', uploadRoutes);
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'API da Plataforma de Artigos está no ar!' });
