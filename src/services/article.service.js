@@ -11,7 +11,7 @@ async function createArticle(articleData, requestingUser) {
     throw new Error("Acesso negado. Apenas administradores podem publicar artigos.");
   }
 
-  const { title, content, categoryId } = articleData;
+  const { title, content, categoryId, cover_image_url } = articleData;
 
   if (!title || !content || !categoryId) {
     throw new Error("Título, conteúdo e categoria são obrigatórios.");
