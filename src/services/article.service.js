@@ -4,6 +4,7 @@ const Article = require('../models/Article');
 const slugify = require('slugify');
 const User = require('../models/User');        
 const Category = require('../models/Category');
+const { Op } = require('sequelize');
 
 async function createArticle(articleData, requestingUser) {
   // Lógica de Autorização: Só admins podem criar artigos
@@ -33,23 +34,55 @@ async function createArticle(articleData, requestingUser) {
   return newArticle;
 }
 
+// src/services/article.service.js
+
+// ... (depois da linha do 'require' que você adicionou)
+
 async function findAllArticles(queryOptions) {
   // Define valores padrão para a paginação
   const page = parseInt(queryOptions.page, 10) || 1;
   const limit = parseInt(queryOptions.limit, 10) || 10;
   const offset = (page - 1) * limit;
 
-  // Usamos findAndCountAll para obter os dados e a contagem total
+  // --- AQUI COMEÇA A CORREÇÃO ---
+
+  // 1. Começamos com uma cláusula 'where' base que sempre se aplica
+  const whereClause = { status: 'published' };
+
+  // 2. Adicionamos o filtro de categoria, se ele existir na query
+  if (queryOptions.categoryId) {
+    whereClause.categoryId = queryOptions.categoryId;
+  }
+
+  // 3. Adicionamos o filtro de busca (search), se ele existir
+  if (queryOptions.search) {
+    const searchTerm = queryOptions.search;
+    // Usamos Op.or para buscar no título OU no conteúdo
+    whereClause[Op.or] = [
+      {
+        title: {
+          [Op.like]: `%${searchTerm}%` // Procura o termo em qualquer parte do título
+        }
+      },
+      {
+        content: {
+          [Op.like]: `%${searchTerm}%` // Procura o termo em qualquer parte do conteúdo
+        }
+      }
+    ];
+  }
+
+  // 4. Usamos a cláusula 'where' dinâmica na nossa busca
   const { count, rows } = await Article.findAndCountAll({
-    where: { status: 'published' },
+    where: whereClause, // <<-- MUDANÇA PRINCIPAL AQUI
     order: [['publication_date', 'DESC']],
-    attributes: { exclude: ['content', 'updatedAt'] },
+    attributes: { exclude: ['content', 'updatedAt'] }, // Mantemos a exclusão do conteúdo na listagem
     include: [
       { model: User, attributes: ['full_name', 'username'] },
       { model: Category, attributes: ['name', 'slug'] }
     ],
-    limit: limit,   // Limita o número de resultados
-    offset: offset, // Pula os resultados das páginas anteriores
+    limit: limit,
+    offset: offset,
   });
 
   return {
@@ -59,6 +92,8 @@ async function findAllArticles(queryOptions) {
     currentPage: page,
   };
 }
+
+// ... (resto do seu arquivo article.service.js)
 
 async function findArticleBySlug(slug) {
   const article = await Article.findOne({
