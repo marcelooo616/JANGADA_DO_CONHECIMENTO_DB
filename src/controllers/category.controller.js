@@ -24,6 +24,17 @@ exports.findAll = async (req, res) => {
   }
 };
 
+exports.getArticleCount = async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const result = await categoryService.countArticlesByCategoryId(categoryId);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Erro ao contar artigos da categoria:", error);
+    res.status(500).json({ message: "Erro interno ao verificar a categoria." });
+  }
+};
+
 exports.update = async (req, res) => {
   try {
     const requestingUser = { id: req.userId, role: req.userRole };

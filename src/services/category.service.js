@@ -56,9 +56,22 @@ async function deleteCategory(id, requestingUser) {
   await category.destroy();
 }
 
+async function countArticlesByCategoryId(categoryId) {
+  // O Sequelize 'count' é otimizado para contar registros
+  const count = await Article.count({
+    where: {
+      categoryId: categoryId,
+    },
+  });
+  // Retornamos um objeto no formato que o front-end espera
+  return { count };
+}
+
+
 module.exports = {
   createCategory,
   findAllCategories,
   updateCategory,
   deleteCategory,
+  countArticlesByCategoryId,
 };

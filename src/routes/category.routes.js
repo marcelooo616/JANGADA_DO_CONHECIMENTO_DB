@@ -7,6 +7,7 @@ const verifyToken = require('../middleware/auth.middleware');
 
 // Rotas Públicas
 router.get('/', categoryController.findAll);
+router.get('/:id/article-count', categoryController.getArticleCount);
 
 // Rotas Protegidas (Apenas Admins)
 router.post('/', verifyToken, categoryController.create);
