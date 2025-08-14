@@ -1,6 +1,6 @@
 // src/services/category.service.js
 
-const { Category } = require('../models');
+const { Category, Article} = require('../models');
 const slugify = require('slugify');
 
 async function createCategory(categoryData, requestingUser) {
