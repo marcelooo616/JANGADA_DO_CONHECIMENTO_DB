@@ -22,8 +22,10 @@ async function updateUser(id, userData, requestingUser) {
   }
   
   // Apenas campos permitidos podem ser atualizados por um admin
-  const { roleId, is_active } = userData;
-  await user.update({ roleId, is_active });
+  const { roleId, IS_ACTIVE } = userData;
+  const updateData = {};
+  if (roleId !== undefined) updateData.roleId = roleId;
+  if (IS_ACTIVE !== undefined) updateData.IS_ACTIVE = IS_ACTIVE;
 
   return user;
 }
