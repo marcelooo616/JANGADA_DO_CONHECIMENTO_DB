@@ -27,6 +27,11 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+   is_active: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: true
+    },
   // A coluna 'roleId' (Foreign Key) será criada automaticamente pela associação abaixo
 }, {
   tableName: 'USERS', // Força o nome da tabela a ser 'USERS' em maiúsculas

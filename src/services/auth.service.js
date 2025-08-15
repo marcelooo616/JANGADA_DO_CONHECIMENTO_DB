@@ -38,7 +38,8 @@ async function registerUser(userData) {
     username,
     email,
     password_hash,
-    roleId: role.id
+    roleId: role.id,
+    is_active: true
   });
 
   // O serviço retorna os dados brutos, sem se preocupar com o formato da resposta HTTP
@@ -62,6 +63,11 @@ async function loginUser(loginData) {
   if (!user) {
     // Lança um erro que o controller vai tratar como 401 (Não Autorizado)
     throw new Error("Credenciais inválidas.");
+  }
+
+  // Verifica se o usuário está ativo ANTES de checar a senha
+  if (!user.is_active) {
+    throw new Error("Usuário desativado. Por favor, contate o administrador.");
   }
 
   const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
