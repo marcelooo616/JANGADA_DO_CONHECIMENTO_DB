@@ -66,7 +66,7 @@ async function loginUser(loginData) {
   }
 
   // Verifica se o usuário está ativo ANTES de checar a senha
-  if (!user.is_active) {
+ if (user.IS_ACTIVE === 0) { 
     throw new Error("Usuário desativado. Por favor, contate o administrador.");
   }
 
@@ -74,6 +74,13 @@ async function loginUser(loginData) {
 
   if (!isPasswordCorrect) {
     throw new Error("Credenciais inválidas.");
+  }
+
+    if (!user.Role || !user.Role.name) {
+    // Isso evita o erro 500 se um usuário não tiver cargo.
+    // Lança um erro claro que pode ser visto nos logs.
+    console.error(`ERRO CRÍTICO: Usuário com ID ${user.id} não possui uma Role associada.`);
+    throw new Error("Erro de configuração de usuário. Contate o suporte.");
   }
 
   // Lógica de negócio: gerar o token
