@@ -1,19 +1,41 @@
+// src/services/news.service.js
 const axios = require('axios');
 
-async function fetchMicrosoftNews() {
-  try {
-    const apiKey = process.env.NEWS_API_KEY;
-    if (!apiKey) throw new Error("Chave da News API não encontrada no .env do servidor.");
+const NEWS_API_KEY = process.env.NEWS_API_KEY;
 
-    const url = `https://newsapi.org/v2/everything?q=microsoft&language=pt&sortBy=publishedAt&apiKey=${apiKey}`;
-    
-    const response = await axios.get(url);
-    return response.data.articles;
+async function findMicrosoftNews(queryOptions) { // Agora aceita queryOptions
+  if (!NEWS_API_KEY) {
+    throw new Error('Chave da News API não encontrada no .env do servidor.');
+  }
+
+  // Pega a página e o limite da query, com valores padrão
+  const page = parseInt(queryOptions.page, 10) || 1;
+  const pageSize = parseInt(queryOptions.pageSize, 10) || 6; // Mantemos o padrão de 6
+
+  try {
+    const response = await axios.get('https://newsapi.org/v2/everything', {
+      params: {
+        q: 'microsoft',
+        language: 'pt',
+        sortBy: 'publishedAt',
+        apiKey: NEWS_API_KEY,
+        pageSize: pageSize, // <<-- Parâmetro para o tamanho da página
+        page: page,         // <<-- Parâmetro para o número da página
+      }
+    });
+
+    // Retornamos os dados junto com a informação de paginação
+    return {
+      news: response.data.articles,
+      totalResults: response.data.totalResults,
+      totalPages: Math.ceil(response.data.totalResults / pageSize),
+      currentPage: page,
+    };
 
   } catch (error) {
-    console.error("Erro ao buscar notícias da News API:", error.message);
-    throw new Error("Não foi possível buscar as notícias externas.");
+    console.error("Erro ao buscar notícias da News API:", error.response?.data?.message || error.message);
+    throw new Error('Não foi possível buscar as notícias externas.');
   }
 }
 
-module.exports = { fetchMicrosoftNews };
+module.exports = { findMicrosoftNews };
