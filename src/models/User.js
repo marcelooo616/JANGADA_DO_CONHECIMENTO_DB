@@ -27,7 +27,7 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-   is_active: {
+   IS_ACTIVE: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: true
