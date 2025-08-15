@@ -3,6 +3,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+
 // Import our central database object which includes sequelize and all models
 const db = require('./models');
 const authRoutes = require('./routes/auth.routes');

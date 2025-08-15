@@ -1,4 +1,6 @@
+const axios = require('axios');
 const newsService = require('../services/news.service');
+
 
 exports.getMicrosoftNews = async (req, res) => {
   try {
