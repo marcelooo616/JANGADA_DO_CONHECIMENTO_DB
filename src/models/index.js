@@ -1,41 +1,44 @@
 // src/models/index.js
+'use strict';
 
-const sequelize = require('../config/database');
-const Role = require('./Role');
-const User = require('./User');
-const Category = require('./Category');
-const Article = require('./Article');
-const Comment = require('./Comment');
+const fs = require('fs');
+const path = require('path');
+const Sequelize = require('sequelize');
+const process = require('process');
+const basename = path.basename(__filename);
+const env = process.env.NODE_ENV || 'development';
+const config = require(__dirname + '/../config/config.js')[env];
+const db = {};
 
-// 1. Define all associations here
-// User <-> Role
-Role.hasMany(User, { foreignKey: 'roleId' });
-User.belongsTo(Role, { foreignKey: 'roleId' });
+let sequelize;
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
+} else {
+  sequelize = new Sequelize(config.database, config.username, config.password, config);
+}
 
-// User <-> Article (Author)
-User.hasMany(Article, { foreignKey: 'userId' });
-Article.belongsTo(User, { foreignKey: 'userId' });
+fs
+  .readdirSync(__dirname)
+  .filter(file => {
+    return (
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+    );
+  })
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(sequelize, Sequelize.DataTypes);
+    db[model.name] = model;
+  });
 
-// Category <-> Article
-Category.hasMany(Article, { foreignKey: 'categoryId' });
-Article.belongsTo(Category, { foreignKey: 'categoryId' });
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
 
-// User <-> Comment (Author of Comment)
-User.hasMany(Comment, { foreignKey: 'userId' });
-Comment.belongsTo(User, { foreignKey: 'userId' });
-
-// Article <-> Comment
-Article.hasMany(Comment, { foreignKey: 'articleId' });
-Comment.belongsTo(Article, { foreignKey: 'articleId' });
-
-// 2. Export everything together
-const db = {
-  sequelize,
-  Role,
-  User,
-  Category,
-  Article,
-  Comment,
-};
+db.sequelize = sequelize;
+db.Sequelize = Sequelize;
 
 module.exports = db;

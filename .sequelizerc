@@ -1,0 +1,15 @@
+const path = require('path');
+
+module.exports = {
+  // Aponta para o arquivo que exporta a configuração do Sequelize
+  'config': path.resolve('src', 'config', 'config.js'), // IMPORTANTE: Verifique se este é o caminho correto para sua configuração de banco de dados
+
+  // Aponta para a pasta onde seus modelos ficam
+  'models-path': path.resolve('src', 'models'),
+
+  // Define onde as migrações serão criadas
+  'migrations-path': path.resolve('database', 'migrations'),
+
+  // Define onde os seeders serão criados (boa prática)npx sequelize-cli db:migrate
+  'seeders-path': path.resolve('database', 'seeders')
+};

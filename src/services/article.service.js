@@ -1,10 +1,9 @@
 // src/services/article.service.js
 
-const Article = require('../models/Article');
-const slugify = require('slugify');
-const User = require('../models/User');        
-const Category = require('../models/Category');
 const { Op } = require('sequelize');
+const slugify = require('slugify');
+// A única importação de modelos que você precisa é esta:
+const { Article, User, Category } = require('../models');
 
 async function createArticle(articleData, requestingUser) {
   // Lógica de Autorização: Só admins podem criar artigos
