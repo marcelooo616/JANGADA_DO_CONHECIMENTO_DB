@@ -14,6 +14,7 @@ const categoryRoutes = require('./routes/category.routes');
 const userRoutes = require('./routes/user.routes');
 const roleRoutes = require('./routes/role.routes');
 const newsRoutes = require('./routes/news.routes');
+const courseRoutes = require('./routes/course.routes');
 // ... e qualquer outra rota
 
 const app = express();
@@ -27,6 +28,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
 app.use('/api/news', newsRoutes);
+app.use('/api/courses', courseRoutes);
 // ...
 
 const PORT = process.env.PORT || 3000;
